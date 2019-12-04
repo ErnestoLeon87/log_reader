@@ -35,6 +35,20 @@ class Log_Reader:
                 if item.__contains__("failed"):
                     self.loglist.append(item)
 
+    def getErrorLogList(self, logList):
+        resutl = []
+        log_item = {"name": "", "time": "", "date": ""}
+        patternName = re.compile(self.nameRegex)
+        patternTime = re.compile(self.timeRegex)
+        patternDate = re.compile(self.dateRegex)
+        for i in logList:
+            log_item["name"] = patternName.findall(i)
+            log_item["time"] = patternTime.findall(i)
+            log_item["date"] = patternDate.findall(i)
+
+            resutl.append(log_item)
+        return resutl
+
 
 logreader = Log_Reader(path)
 # logreader.readLogName()
