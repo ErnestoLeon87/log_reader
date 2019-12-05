@@ -1,4 +1,6 @@
 import re
+from logclass import Log
+
 
 path = "smsts.log"
 
@@ -18,13 +20,33 @@ class LogReader:
 
     def __readlog(self):
         listResult = []
+        threadlist = self.getThreadFailed()
+
+        patternName = re.compile(self.nameRegex)
+        patternTime = re.compile(self.timeRegex)
+        patternDate = re.compile(self.dateRegex)
+
         with open(self.logPath, "r") as log:
-            for item in log:
-                if ("Failed" in item) or ("failed" in item):
-                    listResult.append(item)
+            for itemthread in threadlist:
+                for itemlog in log:
+                    if itemthread in itemlog:
+                        nameParam = patternName.findall(itemlog)
+                        nameParam = nameParam[0][5:-5]
+
+                        dateParam = patternDate.findall(itemlog)
+                        dateParam = dateParam[0]
+
+                        timeParam = patternTime.findall(itemlog)
+                        timeParam = timeParam[0]
+
+                        itemthread = itemthread[8:(len(itemthread) - 1)]
+                        newlogobj = Log(nameParam, dateParam,
+                                        timeParam, itemthread)
+                        listResult.append(newlogobj)
+
         return listResult
 
-    def getThreadFailed(self):
+    def getThreadFailed(self):  # Function to get the thread numbers of failed log
         listResult = []
         with open(self.logPath, "r") as log:
             patternThread = re.compile(self.threadRegex)
@@ -32,6 +54,8 @@ class LogReader:
                 found = False
                 if ("Failed" in item) or ("failed" in item):
                     itemFound = patternThread.findall(item)
+                    #itemFound = int(itemFound[0][8:(len(itemFound[0])-1)])
+
                     if len(listResult) == 0:
                         print("The FIRST One", itemFound[0])
                         listResult.append(itemFound[0])
@@ -79,4 +103,5 @@ class LogReader:
 
 
 logreader = LogReader(path)
-print(logreader.getThreadFailed())
+print(logreader.loglist[0].name)
+# print(logreader.getThreadFailed())
