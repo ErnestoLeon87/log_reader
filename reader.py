@@ -29,20 +29,18 @@ class LogReader:
         with open(self.logPath, "r") as log:
             patternThread = re.compile(self.threadRegex)
             for item in log:
+                found = False
                 if ("Failed" in item) or ("failed" in item):
-                    found = False
                     itemFound = patternThread.findall(item)
                     if len(listResult) == 0:
                         print("The FIRST One", itemFound[0])
                         listResult.append(itemFound[0])
                     else:
-                        for r in listResult:
-                            if itemFound[0] in r:
-                                print("Found it", itemFound[0])
+                        for resl in listResult:
+                            if resl != itemFound[0]:
+                                pass
+                            if resl == itemFound[0]:
                                 found = True
-                            else:
-                                print("Not found it", itemFound[0])
-                                found = False
                         if not found:
                             listResult.append(itemFound[0])
                 else:
@@ -81,4 +79,4 @@ class LogReader:
 
 
 logreader = LogReader(path)
-print(logreader.getThreadFailed)
+print(logreader.getThreadFailed())
