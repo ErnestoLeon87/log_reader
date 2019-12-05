@@ -33,15 +33,18 @@ class LogReader:
                     found = False
                     itemFound = patternThread.findall(item)
                     if len(listResult) == 0:
-                        listResult.append(itemFound)
+                        print("The FIRST One", itemFound[0])
+                        listResult.append(itemFound[0])
                     else:
                         for r in listResult:
                             if itemFound[0] in r:
+                                print("Found it", itemFound[0])
                                 found = True
                             else:
+                                print("Not found it", itemFound[0])
                                 found = False
                         if not found:
-                            listResult.append(itemFound)
+                            listResult.append(itemFound[0])
                 else:
                     pass
         return listResult
@@ -78,4 +81,4 @@ class LogReader:
 
 
 logreader = LogReader(path)
-print(logreader.getThreadFailed())
+print(logreader.getThreadFailed)
