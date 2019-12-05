@@ -6,7 +6,6 @@ path = "smsts.log"
 class LogReader:
     def __init__(self, logPath: "", readlog=None):
         self.logPath = logPath
-        self.loglist = []
         self.threadRegex = r"thread=\"[0-9]+\""
         self.failedRegex = r""
         self.nameRegex = r"\[+[\w\s\d\t\$.:\\'-_\]]+"
@@ -14,9 +13,9 @@ class LogReader:
         self.dateRegex = r"[0-9]{2}-[0-9]{2}-[0-9]{4}"
         self.errorCodeRegex = r"0x[A-F0-9]{8}"
         if readlog == None:
-            self.loglist = self.__readlog()
+            self.loglist = self.readlog()
 
-    def __readlog(self):
+    def readlog(self):
         listResult = []
         with open(self.logPath, "r") as log:
             for item in log:
@@ -24,6 +23,7 @@ class LogReader:
                     listResult.append(item)
         return listResult
 
+    # Function to get just thread failed
     def getThreadFailed(self):
         listResult = []
         with open(self.logPath, "r") as log:
@@ -33,7 +33,6 @@ class LogReader:
                 if ("Failed" in item) or ("failed" in item):
                     itemFound = patternThread.findall(item)
                     if len(listResult) == 0:
-                        print("The FIRST One", itemFound[0])
                         listResult.append(itemFound[0])
                     else:
                         for resl in listResult:
@@ -45,7 +44,7 @@ class LogReader:
                             listResult.append(itemFound[0])
                 else:
                     pass
-        return listResult
+        return listResult  # List of thread
 
     def readLogName(self):
         with open(self.logPath, "r") as log:
@@ -76,7 +75,3 @@ class LogReader:
 
             resutl.append(log_item)
         return resutl
-
-
-logreader = LogReader(path)
-print(logreader.getThreadFailed())
