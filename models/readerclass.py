@@ -11,7 +11,7 @@ class LogReader:
         self.threadRegex = r"thread=\"[0-9]+\""
         self.failedRegex = r""
         # ----> ERROR
-        self.nameRegex = r"!\[LOG\[[\w\s\d'\"._:\\\/\[\](=)]*\]LOG\]!"
+        self.nameRegex = r"!\[LOG\[[\w\s\d\(\)\[\]'\".,_:\\\/(=)]*\]LOG\]!"
         self.timeRegex = r"[0-9]+:[0-9]+:[0-9]+\.[0-9]+\+[0-9]+"
         self.dateRegex = r"[0-9]{2}-[0-9]{2}-[0-9]{4}"
         self.errorCodeRegex = r"0x[A-F0-9]{8}"
@@ -32,8 +32,7 @@ class LogReader:
                     if threadlist[i] in itemlog:
                         print(threadlist[i])
                         nameParam = patternName.findall(itemlog)
-                        # nameParam = nameParam[0]  # [5:-5]
-
+                        nameParam = nameParam[0][6:-6]
                         dateParam = patternDate.findall(itemlog)
                         dateParam = dateParam[0]
 
@@ -44,7 +43,6 @@ class LogReader:
                         newlogobj = Log(nameParam, dateParam,
                                         timeParam, itemthread)
                         listResult.append(newlogobj)
-
         return listResult
 
     # Function to get just thread failed
@@ -105,5 +103,5 @@ class LogReader:
 
 
 logreader = LogReader(path)
-print(logreader.loglist[0].name)
+print(logreader.loglist[1].name)
 # print(logreader.getThreadFailed())
