@@ -1,8 +1,5 @@
 import re
-from logclass import Log
-
-
-path = "smsts.log"
+from .logclass import Log
 
 
 class LogReader:
@@ -102,6 +99,6 @@ class LogReader:
         return resutl
 
 
-logreader = LogReader(path)
-print(logreader.loglist[1].name)
+# logreader = LogReader(path)
+# print(logreader.loglist[1].name)
 # print(logreader.getThreadFailed())
