@@ -43,7 +43,6 @@ class LogReader:
         return listResult
 
     # Function to get just thread failed
-
     def getThreadFailed(self):  # Function to get the thread numbers of failed log
         listResult = []
         with open(self.logPath, "r") as log:
