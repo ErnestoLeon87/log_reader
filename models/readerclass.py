@@ -98,6 +98,3 @@ class LogReader:
         return resutl
 
 
-# logreader = LogReader(path)
-# print(logreader.loglist[1].name)
-# print(logreader.getThreadFailed())
