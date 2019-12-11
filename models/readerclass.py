@@ -96,5 +96,3 @@ class LogReader:
 
             resutl.append(log_item)
         return resutl
-
-

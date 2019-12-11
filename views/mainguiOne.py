@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from models import Log
 
 
 class Ui_MainWindow(object):
