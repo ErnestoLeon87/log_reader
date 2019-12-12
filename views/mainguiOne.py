@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from models import Log
+from models import LogReader
 
 
 class Ui_MainWindow(object):
@@ -23,11 +23,25 @@ class Ui_MainWindow(object):
         # self.tableWidget.setGeometry(QtCore.QRect(20, 50, 1031, 561))
         # self.tableWidget.setObjectName("tableWidget")
         # self.tableWidget.setColumnCount(4)
-        # self.tableWidget.setRowCount(0)
+        # self.tableWidget.setRowCount(1)
+        # self.tableWidget.setHorizontalHeader(QHeaderView("Thread"))
+
+        # self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("Thread"))
+        # self.tableWidget.setItem(0, 1, QtWidgets.QTableWidgetItem("Name"))
+        # self.tableWidget.setItem(0, 2, QtWidgets.QTableWidgetItem("Date"))
+        # self.tableWidget.setItem(0, 3, QtWidgets.QTableWidgetItem("Time"))
 
         self.tableView = QtWidgets.QTableView(self.centralwidget)
         self.tableView.setGeometry(QtCore.QRect(20, 50, 1031, 561))
         self.tableView.setObjectName("tableView")
+        self.tableView.horizontalHeader().setCascadingSectionResizes(True)
+        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.verticalHeader().setCascadingSectionResizes(False)
+
+        # Create a model and horizontal headers
+        self.tableModel = QtGui.QStandardItemModel()
+        self.tableModel.setHorizontalHeaderLabels(
+            ["Name", "Thread", "Date", "Time"])
 
         self.label1 = QtWidgets.QLabel(self.centralwidget)
         self.label1.setGeometry(QtCore.QRect(30, 10, 91, 21))
@@ -72,8 +86,10 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.path = ""
 
+        self.tableView.setModel(self.tableModel)
+
+        self.path = ""
         # lgreader = LogReader()
 
     def retranslateUi(self, MainWindow):
@@ -96,5 +112,5 @@ class Ui_MainWindow(object):
         app = QtWidgets.QApplication(sys.argv)
         sys.exit(app.exec_())
 
-    def populate_list(self):
-        pass
+    # def populate_table(self, datapath):
+    #     logread = LogReader(datapath)
