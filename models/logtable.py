@@ -1,3 +1,3 @@
-from PyQt5 import QtCore, QtWidgets
+# from PyQt5 import QtCore, QtWidgets
 
-table = QtWidgets.QTableView()
+# table = QtWidgets.QTableView()

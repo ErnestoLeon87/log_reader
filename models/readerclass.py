@@ -1,5 +1,5 @@
 import re
-from .logclass import Log
+from logclass import Log
 
 
 class LogReader:
@@ -25,10 +25,14 @@ class LogReader:
         patternTime = re.compile(self.timeRegex)
         patternDate = re.compile(self.dateRegex)
 
+        patternThread = re.compile(self.threadRegex)
+
         with open(self.logPath, "r") as log:
             for i in range(0, len(threadlist)):
                 for itemlog in log:
-                    if threadlist[i] in itemlog:
+                    threaditem = patternThread.findall(itemlog)
+
+                    if threadlist[i] == threaditem[0]:
                         print(threadlist[i])
                         nameParam = patternName.findall(itemlog)
                         nameParam = nameParam[0][6:-6]
@@ -99,3 +103,6 @@ class LogReader:
 
             resutl.append(log_item)
         return resutl
+
+
+varlog = LogReader("smsts.log")

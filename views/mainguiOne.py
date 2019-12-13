@@ -12,7 +12,8 @@ from models import LogReader
 
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def __init__(self, MainWindow):
+        super().__init__()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1068, 663)
 
@@ -39,6 +40,8 @@ class Ui_MainWindow(object):
         self.tableView.verticalHeader().setCascadingSectionResizes(False)
 
         # Create a model and horizontal headers
+        # TableModel QtGui.QStandardItemModel var is the var to interact whit
+        # QTableView object
         self.tableModel = QtGui.QStandardItemModel()
         self.tableModel.setHorizontalHeaderLabels(
             ["Name", "Thread", "Date", "Time"])
@@ -89,7 +92,9 @@ class Ui_MainWindow(object):
 
         self.tableView.setModel(self.tableModel)
 
-        self.path = ""
+        # self.logpath = ""
+        # self.logList = LogReader(logpath)
+
         # lgreader = LogReader()
 
     def retranslateUi(self, MainWindow):
@@ -104,13 +109,27 @@ class Ui_MainWindow(object):
 
     def open_dialog_box(self):
         file = QtWidgets.QFileDialog.getOpenFileName()
-        self.path = file[0]
-        print(self.path)
+        loglist = LogReader(file[0])
+        self.populate_table(loglist.loglist)
+
+        # return file[0]
 
     def exit_app(self):
         import sys
         app = QtWidgets.QApplication(sys.argv)
         sys.exit(app.exec_())
 
-    # def populate_table(self, datapath):
-    #     logread = LogReader(datapath)
+    def populate_table(self, list):
+        # self.mainWindows.tableModel.appendRow
+        # self.mainWindows.tableModel.appendRow()
+        loglenght = len(list)
+
+        for i in range(0, loglenght):
+            item = QtGui.QStandardItem(list[i].name)
+            self.tableModel.setItem(i, 0, item)
+            item = QtGui.QStandardItem(list[i].thread)
+            self.tableModel.setItem(i, 1, item)
+            item = QtGui.QStandardItem(list[i].date)
+            self.tableModel.setItem(i, 2, item)
+            item = QtGui.QStandardItem(list[i].time)
+            self.tableModel.setItem(i, 3, item)
