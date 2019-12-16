@@ -1,5 +1,5 @@
 import re
-from logclass import Log
+from .logclass import Log
 
 
 class LogReader:
@@ -7,7 +7,7 @@ class LogReader:
         self.logPath = logPath
         self.threadRegex = r"thread=\"[0-9]+\""
         self.failedRegex = r""
-        self.nameRegex = r"!\[LOG\[[\w\s\d\(\)\[\]'\".,_:\\\/(=)]*\]LOG\]!"
+        self.nameRegex = r"![\w\W\s]+!"
         self.timeRegex = r"[0-9]+:[0-9]+:[0-9]+\.[0-9]+\+[0-9]+"
         self.dateRegex = r"[0-9]{2}-[0-9]{2}-[0-9]{4}"
         self.errorCodeRegex = r"0x[A-F0-9]{8}"
@@ -19,6 +19,7 @@ class LogReader:
 
         """
         listResult = []
+
         threadlist = self.__getThreadFailed()
 
         patternName = re.compile(self.nameRegex)
@@ -26,30 +27,38 @@ class LogReader:
         patternDate = re.compile(self.dateRegex)
 
         patternThread = re.compile(self.threadRegex)
+        try:
+            for item in threadlist:
+                with open(self.logPath, "r") as log:
+                    print(item, " --> Item")
+                    for itemlog in log:
+                        if itemlog[0] == "<":
+                            threaditem = patternThread.findall(itemlog)
 
-        with open(self.logPath, "r") as log:
-            for i in range(0, len(threadlist)):
-                for itemlog in log:
-                    threaditem = patternThread.findall(itemlog)
+                            if (len(threaditem)):
+                                print(threaditem[0], " ====> threaditem")
+                                if item == threaditem[0]:
+                                    print(item)
+                                    nameParam = patternName.findall(itemlog)
+                                    nameParam = nameParam[0][6:-6]
 
-                    if threadlist[i] == threaditem[0]:
-                        print(threadlist[i])
-                        nameParam = patternName.findall(itemlog)
-                        nameParam = nameParam[0][6:-6]
+                                    dateParam = patternDate.findall(itemlog)
+                                    dateParam = dateParam[0]
 
-                        dateParam = patternDate.findall(itemlog)
-                        dateParam = dateParam[0]
+                                    timeParam = patternTime.findall(itemlog)
+                                    timeParam = timeParam[0]
 
-                        timeParam = patternTime.findall(itemlog)
-                        timeParam = timeParam[0]
+                                    itemthread = item[8:-1]
+                                    newlogobj = Log(nameParam, dateParam,
+                                                    timeParam, itemthread)
+                                    listResult.append(newlogobj)
 
-                        itemthread = threadlist[i][8:(len(threadlist[i]) - 1)]
-                        newlogobj = Log(nameParam, dateParam,
-                                        timeParam, itemthread)
-                        listResult.append(newlogobj)
-        return listResult
+            return listResult
+        except Exception as ex:
+            print("Error", "-> ", ex)
 
     # Function to get just thread failed
+
     def __getThreadFailed(self):  # Function to get the thread numbers of failed log
         listResult = []
         with open(self.logPath, "r") as log:
@@ -103,6 +112,3 @@ class LogReader:
 
             resutl.append(log_item)
         return resutl
-
-
-varlog = LogReader("smsts.log")
